@@ -676,7 +676,7 @@ void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
                 convertMessageToMetaData(videoFormat, vMeta);
                 const bool hasVideo = (videoFormat != NULL);
                 const bool canOffload = canOffloadStream(
-                        audioMeta, hasVideo, vMeta, mIsStreaming /* is_streaming */, streamType);
+                        audioMeta, hasVideo, mIsStreaming /* is_streaming */, streamType);
                 if (canOffload) {
                     if (!mOffloadAudio) {
                         mRenderer->signalEnableOffloadAudio();
@@ -1133,7 +1133,7 @@ void NuPlayer::onStart() {
     sp<AMessage> videoFormat = mSource->getFormat(false /* audio */);
     sp<MetaData> vMeta = new MetaData;
     convertMessageToMetaData(videoFormat, vMeta);
-    mOffloadAudio = canOffloadStream(audioMeta, (videoFormat != NULL), vMeta,
+    mOffloadAudio = canOffloadStream(audioMeta, (videoFormat != NULL),
                          mIsStreaming /* is_streaming */, streamType);
      //For offloading decoded content
      if (!mOffloadAudio && (audioMeta != NULL)) {
@@ -1146,7 +1146,7 @@ void NuPlayer::onStart() {
         }
         mOffloadAudio =
                 ((mime && !ExtendedUtils::pcmOffloadException(mime)) &&
-                canOffloadStream(audioPCMMeta, (videoFormat != NULL), vMeta,
+                canOffloadStream(audioPCMMeta, (videoFormat != NULL),
                         mIsStreaming /* is_streaming */, streamType));
         mOffloadDecodedPCM = mOffloadAudio;
         ALOGI("Could not offload audio decode, pcm offload decided :%d",
