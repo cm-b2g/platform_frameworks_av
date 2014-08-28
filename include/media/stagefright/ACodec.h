@@ -96,6 +96,8 @@ struct ACodec : public AHierarchicalStateMachine, public CodecBase {
             int width, int height, int rate, int bitrate,
             OMX_VIDEO_AVCPROFILETYPE profile = OMX_VIDEO_AVCProfileBaseline);
 
+friend class MediaCodec;
+
 protected:
     virtual ~ACodec();
 
@@ -235,6 +237,7 @@ private:
     bool mCreateInputBuffersSuspended;
 
     bool mTunneled;
+    bool mUseUndequeuedBufs;
 
     bool mIsVideoRenderingDisabled;
 
