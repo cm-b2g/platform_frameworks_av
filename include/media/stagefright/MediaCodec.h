@@ -28,6 +28,7 @@
 namespace android {
 
 struct ABuffer;
+struct ACodec;
 struct AMessage;
 struct AReplyToken;
 struct AString;
@@ -172,6 +173,10 @@ struct MediaCodec : public AHandler {
     static size_t CreateFramesRenderedMessage(
             std::list<FrameRenderTracker::Info> done, sp<AMessage> &msg);
 
+    // This is used to get graphicBuffer with the index obtained from
+    // calling dequeueOutputBuffer()
+    sp<GraphicBuffer> getOutputGraphicBufferFromIndex(size_t index);
+
 protected:
     virtual ~MediaCodec();
     virtual void onMessageReceived(const sp<AMessage> &msg);
@@ -284,7 +289,7 @@ private:
     bool mReleasedByResourceManager;
     sp<ALooper> mLooper;
     sp<ALooper> mCodecLooper;
-    sp<CodecBase> mCodec;
+    sp<ACodec> mCodec;
     AString mComponentName;
     sp<AReplyToken> mReplyID;
     uint32_t mFlags;

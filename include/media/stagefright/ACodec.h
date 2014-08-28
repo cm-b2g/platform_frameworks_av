@@ -93,6 +93,8 @@ struct ACodec : public AHierarchicalStateMachine, public CodecBase {
             int width, int height, int rate, int bitrate,
             OMX_VIDEO_AVCPROFILETYPE profile = OMX_VIDEO_AVCProfileBaseline);
 
+friend class MediaCodec;
+
 protected:
     virtual ~ACodec();
     virtual status_t setupCustomCodec(
@@ -276,6 +278,7 @@ protected:
     bool mCreateInputBuffersSuspended;
 
     bool mTunneled;
+    bool mUseUndequeuedBufs;
 
     status_t setCyclicIntraMacroblockRefresh(const sp<AMessage> &msg, int32_t mode);
     status_t allocateBuffersOnPort(OMX_U32 portIndex);

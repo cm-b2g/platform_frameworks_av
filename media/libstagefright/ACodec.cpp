@@ -527,7 +527,8 @@ ACodec::ACodec()
       mTimePerFrameUs(-1ll),
       mTimePerCaptureUs(-1ll),
       mCreateInputBuffersSuspended(false),
-      mTunneled(false) {
+      mTunneled(false),
+      mUseUndequeuedBufs(false) {
     mUninitializedState = new UninitializedState(this);
     mLoadedState = new LoadedState(this);
     mLoadedToIdleState = new LoadedToIdleState(this);
@@ -1100,7 +1101,12 @@ status_t ACodec::allocateOutputBuffersFromNativeWindow() {
         cancelEnd = mBuffers[kPortIndexOutput].size();
     } else {
         // Return the required minimum undequeued buffers to the native window.
-        cancelStart = bufferCount - minUndequeuedBuffers;
+        if (mUseUndequeuedBufs) {
+          cancelStart = bufferCount;
+          mNumUndequeuedBuffers = 0;
+        } else {
+          cancelStart = bufferCount - minUndequeuedBuffers;
+        }
         cancelEnd = bufferCount;
     }
 
@@ -2252,6 +2258,14 @@ status_t ACodec::configureCodec(
             mOutputFormat = outputFormat;
         }
     }
+
+    int32_t useUndequeuedBufs;
+    if (msg->findInt32("moz-use-undequeued-bufs", &useUndequeuedBufs)) {
+        mUseUndequeuedBufs = true;
+    } else {
+        mUseUndequeuedBufs = false;
+    }
+
     return err;
 }
 
